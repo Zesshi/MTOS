@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { startTransition, useDeferredValue, useEffect, useState } from "react";
+import { startTransition, useDeferredValue } from "react";
 import { PostList } from "@/components/post-list";
 import type { PostSummary } from "@/lib/post-types";
 import { cn } from "@/lib/utils";
@@ -11,9 +11,6 @@ type ArchiveBrowserProps = {
   posts: PostSummary[];
   categories: string[];
   tags: string[];
-  initialCategory?: string;
-  initialTag?: string;
-  initialQuery?: string;
 };
 
 function FilterListButton({
@@ -141,34 +138,37 @@ export function ArchiveBrowser({
   posts,
   categories,
   tags,
-  initialCategory,
-  initialTag,
-  initialQuery,
 }: ArchiveBrowserProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [category, setCategory] = useState(initialCategory ?? "");
-  const [tag, setTag] = useState(initialTag ?? "");
-  const [query, setQuery] = useState(initialQuery ?? "");
-
+  const category = searchParams.get("category") ?? "";
+  const tag = searchParams.get("tag") ?? "";
+  const query = searchParams.get("q") ?? "";
   const deferredQuery = useDeferredValue(query.trim().toLowerCase());
   const currentQueryString = searchParams.toString();
 
-  useEffect(() => {
+  const replaceFilters = (nextValues: {
+    category?: string;
+    tag?: string;
+    query?: string;
+  }) => {
     const params = new URLSearchParams();
+    const nextCategory = nextValues.category ?? category;
+    const nextTag = nextValues.tag ?? tag;
+    const nextQuery = nextValues.query ?? query;
 
-    if (category) {
-      params.set("category", category);
+    if (nextCategory) {
+      params.set("category", nextCategory);
     }
 
-    if (tag) {
-      params.set("tag", tag);
+    if (nextTag) {
+      params.set("tag", nextTag);
     }
 
-    if (query.trim()) {
-      params.set("q", query.trim());
+    if (nextQuery.trim()) {
+      params.set("q", nextQuery.trim());
     }
 
     const nextQueryString = params.toString();
@@ -182,7 +182,7 @@ export function ArchiveBrowser({
         scroll: false,
       });
     });
-  }, [category, currentQueryString, pathname, query, router, tag]);
+  };
 
   const filteredPosts = posts.filter((post) => {
     if (category && post.category !== category) {
@@ -205,11 +205,7 @@ export function ArchiveBrowser({
   });
 
   const clearFilters = () => {
-    startTransition(() => {
-      setCategory("");
-      setTag("");
-      setQuery("");
-    });
+    replaceFilters({ category: "", tag: "", query: "" });
   };
 
   return (
@@ -222,13 +218,9 @@ export function ArchiveBrowser({
             tag={tag}
             categories={categories}
             tags={tags}
-            onQueryChange={(nextValue) => {
-              startTransition(() => {
-                setQuery(nextValue);
-              });
-            }}
-            onCategoryChange={setCategory}
-            onTagChange={setTag}
+            onQueryChange={(nextValue) => replaceFilters({ query: nextValue })}
+            onCategoryChange={(nextValue) => replaceFilters({ category: nextValue })}
+            onTagChange={(nextValue) => replaceFilters({ tag: nextValue })}
             onClear={clearFilters}
           />
         </div>
