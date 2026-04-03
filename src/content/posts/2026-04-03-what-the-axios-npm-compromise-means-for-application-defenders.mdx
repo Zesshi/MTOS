@@ -1,0 +1,203 @@
+export const metadata = {
+  title: "What the axios npm compromise means for application defenders",
+  description:
+    "A source-backed incident note on the March 31, 2026 axios compromise, focused on triage, evidence levels, host artifacts, and software supply-chain hardening.",
+  publishedAt: "2026-04-03",
+  updatedAt: "2026-04-03",
+  category: "news",
+  tags: [
+    "axios",
+    "npm",
+    "supply-chain",
+    "incident-response",
+    "appsec",
+    "github-actions",
+    "dependabot",
+  ],
+  featured: false,
+  coverImage: "/images/posts/axios-incident/axios-incident-timeline.svg",
+  coverAlt: "Timeline of the axios supply-chain compromise between March 30 and March 31, 2026.",
+  externalLinks: [
+    {
+      label: "GTIG analysis",
+      href: "https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package",
+    },
+    {
+      label: "Axios maintainer post-mortem",
+      href: "https://github.com/axios/axios/issues/10636",
+    },
+    {
+      label: "Huntress response note",
+      href: "https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package",
+    },
+    {
+      label: "UNC1069 on Malpedia",
+      href: "https://malpedia.caad.fkie.fraunhofer.de/actor/unc1069",
+    },
+    {
+      label: "GitHub Dependabot docs",
+      href: "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependabot-version-updates",
+    },
+    {
+      label: "GitHub Actions secure use",
+      href: "https://docs.github.com/en/actions/reference/security/secure-use",
+    },
+    {
+      label: "npm trusted publishing",
+      href: "https://docs.npmjs.com/trusted-publishers/",
+    },
+    {
+      label: "npm provenance",
+      href: "https://docs.npmjs.com/generating-provenance-statements/",
+    },
+  ],
+};
+
+# What the axios npm compromise means for application defenders
+
+<Callout title="Immediate triage">
+Did any developer machine, CI runner, or build host run a fresh install that resolved `axios@1.14.1`, `axios@0.30.4`, or `plain-crypto-js` during the roughly `00:21` to `03:20 UTC` window on March 31, 2026? If yes: isolate it, rebuild it, and rotate the credentials that were present there. GTIG gives the window as `00:21-03:20 UTC`; the axios maintainer cites `00:21-03:15 UTC`; Huntress reports package removal around `03:29-03:30 UTC`, so treat the window as approximate rather than exact. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[2]](https://github.com/axios/axios/issues/10636) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+</Callout>
+
+On March 31, 2026, attackers published two malicious axios versions, `1.14.1` and `0.30.4`, through a compromised maintainer account. GTIG says those releases introduced `plain-crypto-js`, whose `postinstall` hook executed `setup.js` and deployed `WAVESHAPER.V2` across Windows, macOS, and Linux. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package)
+
+The key defensive point is simple: this was not just a "bad package version" event. If an affected install actually ran on a developer endpoint or build system, you should treat that host as potentially compromised. The maintainer says to rotate every secret, token, and credential on that machine, and Huntress uses the same posture in its response guidance. [[2]](https://github.com/axios/axios/issues/10636) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+GTIG attributes the activity to UNC1069 based on malware and infrastructure overlaps. Malpedia is a useful background reference for the actor cluster. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[4]](https://malpedia.caad.fkie.fraunhofer.de/actor/unc1069) The maintainer also says the package publication was preceded by a targeted social-engineering campaign and RAT infection on his machine. [[2]](https://github.com/axios/axios/issues/10636)
+
+![Timeline of the axios supply-chain compromise from March 30 to March 31, 2026.](/images/posts/axios-incident/axios-incident-timeline.svg)
+
+*Timeline condensed from GTIG, the maintainer post-mortem, and Huntress's removal timestamps. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[2]](https://github.com/axios/axios/issues/10636) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)*
+
+## What is confirmed
+
+- GTIG says the malicious dependency was introduced into `axios@1.14.1` and `axios@0.30.4`, and that the dropper led to `WAVESHAPER.V2` on all three major desktop/server platforms. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package)
+- The maintainer's timeline places `axios@1.14.1` at `00:21 UTC`, `axios@0.30.4` at about `01:00 UTC`, and removal of the malicious axios versions at `03:15 UTC` with `plain-crypto-js` removed at `03:29 UTC`. [[2]](https://github.com/axios/axios/issues/10636)
+- Huntress observed infections inside the exposure window, including the first monitored infection 89 seconds after `axios@1.14.1` was published. [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+- Huntress also documents a useful nuance for maintainers: even where OIDC trusted publishing had been configured, a coexisting `NPM_TOKEN` still meant token auth was effectively being used. [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+## Evidence levels
+
+| Level | What it means | Examples | What I would do |
+| --- | --- | --- | --- |
+| Project exposed | The project references the bad package versions, but you do not yet know which machine executed the install. | Lockfile hit, SBOM hit, dependency graph hit, build manifest hit. | Freeze installs, pin safe versions, and identify which hosts or runners actually ran the install. |
+| Host likely executed | A specific machine or CI runner appears to have resolved and installed the package during the exposure window. | Install logs, build logs, cache activity, or package manager traces tied to a host. | Isolate that host or runner, rebuild it, and rotate credentials present there. |
+| Host strongly indicated compromised | There is direct host evidence tied to the malicious chain. | `node_modules/plain-crypto-js/`, network traffic to `sfrclak[.]com` or `142.11.206.73:8000`, or platform artifacts such as `%PROGRAMDATA%\\wt.exe` or `/Library/Caches/com.apple.act.mond`. | Treat it as a full incident-response case, not a dependency cleanup task. |
+
+Huntress makes one especially useful distinction here: after the dropper cleans itself up, `node_modules/plain-crypto-js/` can still look like a normal library, but Huntress says the presence of that directory is itself evidence of compromise. [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+## Immediate response
+
+### 1. Freeze and pin
+
+Pin to known-good axios versions first, then stop anything that still resolves floating ranges from the public registry. GTIG recommends serving only known-good versions such as `1.14.0` or earlier and `0.30.3` or earlier from managed repositories. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package)
+
+```bash title="Pin safe versions"
+npm install axios@1.14.0
+# or, for legacy 0.x users
+npm install axios@0.30.3
+```
+
+If you need to prevent transitive drift while you audit, use the package-manager feature that matches your stack. These are illustrative examples, not one universal drop-in snippet:
+
+```json title="package.json (npm)"
+{
+  "overrides": {
+    "axios": "1.14.0"
+  }
+}
+```
+
+```yaml title="pnpm-workspace.yaml (pnpm)"
+overrides:
+  axios: 1.14.0
+```
+
+```json title="package.json (Yarn)"
+{
+  "resolutions": {
+    "axios": "1.14.0"
+  }
+}
+```
+
+### 2. Rebuild affected hosts, do not "clean in place"
+
+The maintainer says affected machines should have every secret rotated. GTIG says hosts where `plain-crypto-js` is detected should be reverted to a known-good state. Huntress says the same thing operationally: if RAT artifacts are present, rebuild from clean images rather than trying to clean in place. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[2]](https://github.com/axios/axios/issues/10636) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+### 3. Clear caches and suppress scripts where feasible
+
+GTIG explicitly calls out local and shared npm, yarn, and pnpm caches. Huntress also recommends `npm ci` in CI and using `--ignore-scripts` where feasible. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+```bash title="Cleanup and safer reinstall"
+npm cache clean --force
+npm ci --ignore-scripts
+```
+
+Prefer `npm ci --ignore-scripts` when a lockfile already exists and you want a lockfile-respecting reinstall during incident handling. If you are on Yarn or pnpm, use the equivalent lockfile-respecting install mode. Use `--ignore-scripts` carefully, because some builds rely on lifecycle scripts. The point is to reduce unnecessary install-time code execution where your workflow allows it. [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+![Defender playbook for the axios incident: freeze, audit, contain, and harden.](/images/posts/axios-incident/axios-defender-playbook.svg)
+
+*Compact response sequence based on GTIG, the maintainer post-mortem, and Huntress. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[2]](https://github.com/axios/axios/issues/10636) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)*
+
+## What to hunt right now
+
+### Network IOCs
+
+- `sfrclak[.]com`
+- `142.11.206.73`
+- `http://sfrclak[.]com:8000`
+- `http://sfrclak[.]com:8000/6202033`
+
+GTIG lists those as campaign infrastructure and Huntress recommends blocking the C2 at the perimeter. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+### Host artifacts
+
+- All platforms: `node_modules/plain-crypto-js/`
+- macOS: `/Library/Caches/com.apple.act.mond`
+- Windows: `%PROGRAMDATA%\\wt.exe`
+- Windows: `%PROGRAMDATA%\\system.bat`
+- Windows: `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\MicrosoftUpdate`
+- Linux: `/tmp/ld.py`
+
+GTIG and Huntress both document these artifacts and persistence points. Huntress also notes short-lived temp files such as `%TEMP%\\6202033.vbs` and `%TEMP%\\6202033.ps1` on Windows. [[1]](https://cloud.google.com/blog/topics/threat-intelligence/north-korea-threat-actor-targets-axios-npm-package) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+### Credentials to rotate
+
+- npm tokens
+- GitHub tokens
+- cloud credentials
+- deployment credentials
+- SSH keys
+- `.env` secrets
+- OAuth and API tokens injected into CI
+
+This is the practical consequence of treating the event as host compromise rather than package drift. The maintainer explicitly calls out CI-injected secrets, and Huntress frames developer workstations and CI/CD runners as high-value targets because of the credential material they usually hold. [[2]](https://github.com/axios/axios/issues/10636) [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+## Hardening changes worth keeping
+
+### Keep lockfiles tight and installs boring
+
+Commit lockfiles, prefer `npm ci` in CI/CD, and avoid unnecessary fresh resolution in privileged build environments. Huntress also recommends a release-age quarantine such as `npm config set min-release-age 3` to slow down zero-day package adoption. [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package)
+
+### Use Dependabot to reduce drift, not to outsource trust
+
+[GitHub's Dependabot docs](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependabot-version-updates) are still relevant here. Smaller, frequent dependency updates are easier to review than giant catch-up jumps. But a newly published version is not automatically trustworthy just because an update bot can see it. [[5]](https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependabot-version-updates)
+
+### Treat GitHub Actions like part of your production perimeter
+
+[GitHub's secure-use guidance](https://docs.github.com/en/actions/reference/security/secure-use) recommends least privilege for `GITHUB_TOKEN`, tight secret scoping, and pinning third-party actions to full-length commit SHAs. That advice is directly relevant when the blast radius includes CI secrets and publish pipelines. [[6]](https://docs.github.com/en/actions/reference/security/secure-use)
+
+### If you publish packages, use OIDC and remove the token path
+
+[npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) is the right long-term model, but Huntress adds the more practical lesson: if `NPM_TOKEN` still exists in the workflow path, token auth can still end up being used. The operational fix is not just "turn on OIDC." It is "turn on OIDC and remove long-lived publish tokens from the workflow path." [[3]](https://www.huntress.com/blog/supply-chain-compromise-axios-npm-package) [[7]](https://docs.npmjs.com/trusted-publishers/)
+
+### Use provenance for traceability, not as a proof of innocence
+
+[npm's provenance docs](https://docs.npmjs.com/generating-provenance-statements/) improve traceability around where a package was built and published, but they do not prove the published code is benign. Provenance is useful. It is not a substitute for review, pinning, or incident response. [[8]](https://docs.npmjs.com/generating-provenance-statements/)
+
+## Recommended watch
+
+If you want a quick companion walkthrough after reading the primary sources, this video is a useful secondary summary of the incident and why it matters to application teams.
+
+<YouTubeEmbed id="A58cV17avpM" title="HUGE npm axios supply chain attack" />

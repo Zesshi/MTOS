@@ -1,0 +1,45 @@
+<svg width="1440" height="1240" viewBox="0 0 1440 1240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1440" height="1240" rx="28" fill="#121820"/>
+  <rect x="32" y="32" width="1376" height="1176" rx="24" fill="#10161D" stroke="#27313C"/>
+
+  <text x="84" y="116" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="18" letter-spacing="5">DEFENDER PLAYBOOK</text>
+  <text x="84" y="168" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="50" font-weight="700">How I would handle the axios incident</text>
+  <text x="84" y="208" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="24">A simple four-step sequence for app teams, CI owners, and security engineering.</text>
+
+  <line x1="148" y1="318" x2="148" y2="988" stroke="#27313C" stroke-width="4"/>
+
+  <circle cx="148" cy="370" r="22" fill="#6EE7C8"/>
+  <text x="148" y="378" text-anchor="middle" fill="#10161D" font-family="'IBM Plex Mono', monospace" font-size="18" font-weight="700">1</text>
+  <rect x="208" y="304" width="1140" height="176" rx="24" fill="#18212B" stroke="#27313C"/>
+  <text x="248" y="356" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="30" font-weight="700">Freeze</text>
+  <text x="248" y="398" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Pause installs and deployments immediately.</text>
+  <text x="248" y="430" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Pin axios to 1.14.0 / 0.30.3 or earlier.</text>
+  <text x="248" y="462" fill="#6EE7C8" font-family="'IBM Plex Sans', sans-serif" font-size="20" font-weight="600">Goal: stop more hosts from resolving the bad release.</text>
+
+  <circle cx="148" cy="562" r="22" fill="#6EE7C8"/>
+  <text x="148" y="570" text-anchor="middle" fill="#10161D" font-family="'IBM Plex Mono', monospace" font-size="18" font-weight="700">2</text>
+  <rect x="208" y="496" width="1140" height="176" rx="24" fill="#18212B" stroke="#27313C"/>
+  <text x="248" y="548" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="30" font-weight="700">Audit</text>
+  <text x="248" y="590" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Search lockfiles, build logs, caches, and dependency graphs.</text>
+  <text x="248" y="622" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Look for axios 1.14.1, axios 0.30.4, and plain-crypto-js.</text>
+  <text x="248" y="654" fill="#6EE7C8" font-family="'IBM Plex Sans', sans-serif" font-size="20" font-weight="600">Goal: identify every runner and workstation that installed it.</text>
+
+  <circle cx="148" cy="754" r="22" fill="#6EE7C8"/>
+  <text x="148" y="762" text-anchor="middle" fill="#10161D" font-family="'IBM Plex Mono', monospace" font-size="18" font-weight="700">3</text>
+  <rect x="208" y="688" width="1140" height="176" rx="24" fill="#18212B" stroke="#27313C"/>
+  <text x="248" y="740" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="30" font-weight="700">Contain</text>
+  <text x="248" y="782" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Treat affected runners and workstations as compromised.</text>
+  <text x="248" y="814" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Rebuild from known-good images and rotate exposed secrets.</text>
+  <text x="248" y="846" fill="#6EE7C8" font-family="'IBM Plex Sans', sans-serif" font-size="20" font-weight="600">Goal: respond like a host compromise, not a package cleanup.</text>
+
+  <circle cx="148" cy="946" r="22" fill="#6EE7C8"/>
+  <text x="148" y="954" text-anchor="middle" fill="#10161D" font-family="'IBM Plex Mono', monospace" font-size="18" font-weight="700">4</text>
+  <rect x="208" y="880" width="1140" height="176" rx="24" fill="#18212B" stroke="#27313C"/>
+  <text x="248" y="932" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="30" font-weight="700">Harden</text>
+  <text x="248" y="974" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Clear caches, reduce workflow privilege, and move publishing to OIDC.</text>
+  <text x="248" y="1006" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="22">Use provenance and Dependabot, but keep human review in the loop.</text>
+  <text x="248" y="1038" fill="#6EE7C8" font-family="'IBM Plex Sans', sans-serif" font-size="20" font-weight="600">Goal: slow the next incident down and shrink its blast radius.</text>
+
+  <rect x="84" y="1112" width="1264" height="76" rx="22" fill="#0F141A" stroke="#27313C"/>
+  <text x="116" y="1158" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="24" font-weight="600">Once a malicious package executes, you are doing incident response, not just dependency cleanup.</text>
+</svg>

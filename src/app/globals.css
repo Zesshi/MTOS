@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #0b0f12;
+  --color-ink-900: #10161d;
+  --color-ink-800: #151d26;
+  --color-panel: #121820;
+  --color-panel-strong: #18212b;
+  --color-line: #27313c;
+  --color-copy: #e7edf5;
+  --color-muted: #94a3b8;
+  --color-accent: #6ee7c8;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(110, 231, 200, 0.08), transparent 28%),
+      linear-gradient(180deg, #0b0f12 0%, #0f141a 100%);
+    color: var(--color-copy);
+    font-family: var(--font-sans-ui), sans-serif;
+  }
+
+  * {
+    border-color: rgb(255 255 255 / 0.08);
+  }
+
+  ::selection {
+    background: rgb(110 231 200 / 0.22);
+    color: var(--color-copy);
+  }
+
+  code,
+  kbd,
+  pre,
+  samp,
+  .font-mono {
+    font-family: var(--font-mono-ui), monospace;
+  }
+}
+
+@layer components {
+  .article-prose {
+    width: 100%;
+    max-width: 92ch;
+    color: rgb(231 237 245 / 0.95);
+  }
+
+  .article-prose > :first-child {
+    margin-top: 0;
+  }
+
+  .article-prose h2,
+  .article-prose h3,
+  .article-prose h4 {
+    margin-top: 3rem;
+    color: var(--color-copy);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+
+  .article-prose h2 {
+    font-size: 1.85rem;
+  }
+
+  .article-prose h3 {
+    font-size: 1.45rem;
+  }
+
+  .article-prose p,
+  .article-prose ul,
+  .article-prose ol,
+  .article-prose blockquote,
+  .article-prose table {
+    margin-top: 1.25rem;
+    color: rgb(231 237 245 / 0.82);
+    font-size: 1rem;
+    line-height: 1.95;
+  }
+
+  .article-prose ul,
+  .article-prose ol {
+    padding-left: 1.25rem;
+  }
+
+  .article-prose li + li {
+    margin-top: 0.35rem;
+  }
+
+  .article-prose strong {
+    color: var(--color-copy);
+  }
+
+  .article-prose hr {
+    margin: 2.5rem 0;
+    border-color: rgb(255 255 255 / 0.08);
+  }
+
+  .article-prose blockquote {
+    border-left: 2px solid rgb(110 231 200 / 0.3);
+    padding-left: 1rem;
+    color: rgb(231 237 245 / 0.68);
+  }
+
+  .article-prose table {
+    width: 100%;
+    overflow: hidden;
+    border-collapse: collapse;
+    border-radius: 1rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+  }
+
+  .article-prose th,
+  .article-prose td {
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    padding: 0.85rem 1rem;
+    text-align: left;
+  }
+
+  .article-prose thead th {
+    color: var(--color-copy);
+    background: rgb(255 255 255 / 0.03);
+  }
+
+  .article-prose :where(a:not(.anchor)) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.25rem;
+  }
+
+  .article-prose img {
+    width: 100%;
+    height: auto;
+  }
+
+  .anchor {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .anchor::before {
+    content: "#";
+    margin-right: 0.4rem;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    color: var(--color-accent);
+  }
+
+  .article-prose :is(h2, h3, h4):hover .anchor::before {
+    opacity: 1;
+  }
+
+  [data-rehype-pretty-code-figure] {
+    margin-top: 1.5rem;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: rgb(18 24 32 / 0.82);
+  }
+
+  [data-rehype-pretty-code-title] {
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    padding: 0.75rem 1rem;
+    font-family: var(--font-mono-ui), monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  [data-rehype-pretty-code-figure] pre {
+    overflow-x: auto;
+    padding: 1rem 1.1rem;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  [data-rehype-pretty-code-figure] code {
+    display: grid;
+    min-width: 100%;
+  }
+
+  [data-line] {
+    padding: 0 0.25rem;
+  }
+
+  [data-highlighted-line] {
+    border-left: 2px solid rgb(110 231 200 / 0.42);
+    background: rgb(110 231 200 / 0.08);
+  }
+
+  [data-highlighted-chars] {
+    border-radius: 0.35rem;
+    background: rgb(110 231 200 / 0.14);
+  }
+
+  .giscus-shell,
+  .giscus-frame {
+    width: 100%;
+  }
+}

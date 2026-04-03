@@ -1,0 +1,54 @@
+<svg width="1440" height="980" viewBox="0 0 1440 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1440" height="980" rx="28" fill="#121820"/>
+  <rect x="32" y="32" width="1376" height="916" rx="24" fill="#10161D" stroke="#27313C"/>
+
+  <text x="84" y="116" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="18" letter-spacing="5">AXIOS INCIDENT TIMELINE</text>
+  <text x="84" y="168" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="50" font-weight="700">March 30 to March 31, 2026</text>
+  <text x="84" y="208" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="24">A cleaner incident view: from malicious dependency publication to package removal.</text>
+
+  <line x1="180" y1="280" x2="180" y2="790" stroke="#27313C" stroke-width="4"/>
+
+  <circle cx="180" cy="302" r="11" fill="#6EE7C8"/>
+  <rect x="228" y="256" width="1120" height="92" rx="22" fill="#18212B" stroke="#27313C"/>
+  <rect x="84" y="265" width="118" height="74" rx="18" fill="#0F141A" stroke="#27313C"/>
+  <text x="103" y="296" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="14" letter-spacing="2">MAR 30</text>
+  <text x="103" y="320" fill="#E7EDF5" font-family="'IBM Plex Mono', monospace" font-size="16" font-weight="700">05:57 UTC</text>
+  <text x="260" y="295" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="28" font-weight="700">plain-crypto-js 4.2.0 is published</text>
+  <text x="260" y="324" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="20">The maintainer timeline marks this as the pre-positioning step before the axios releases were altered.</text>
+
+  <circle cx="180" cy="408" r="11" fill="#6EE7C8"/>
+  <rect x="228" y="362" width="1120" height="92" rx="22" fill="#18212B" stroke="#27313C"/>
+  <rect x="84" y="371" width="118" height="74" rx="18" fill="#0F141A" stroke="#27313C"/>
+  <text x="103" y="402" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="14" letter-spacing="2">MAR 31</text>
+  <text x="97" y="426" fill="#E7EDF5" font-family="'IBM Plex Mono', monospace" font-size="16" font-weight="700">00:21 UTC</text>
+  <text x="260" y="401" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="28" font-weight="700">axios 1.14.1 goes live with plain-crypto-js 4.2.1</text>
+  <text x="260" y="430" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="20">GTIG says this is where the malicious dependency appears in the legitimate package release.</text>
+
+  <circle cx="180" cy="514" r="11" fill="#6EE7C8"/>
+  <rect x="228" y="468" width="1120" height="92" rx="22" fill="#18212B" stroke="#27313C"/>
+  <rect x="84" y="477" width="118" height="74" rx="18" fill="#0F141A" stroke="#27313C"/>
+  <text x="93" y="508" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="14" letter-spacing="2">AROUND</text>
+  <text x="96" y="532" fill="#E7EDF5" font-family="'IBM Plex Mono', monospace" font-size="16" font-weight="700">01:00 UTC</text>
+  <text x="260" y="507" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="28" font-weight="700">axios 0.30.4 follows, and public detections begin</text>
+  <text x="260" y="536" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="20">The maintainer timeline places the second release and the first external reports in the same early window.</text>
+
+  <circle cx="180" cy="620" r="11" fill="#6EE7C8"/>
+  <rect x="228" y="574" width="1120" height="92" rx="22" fill="#18212B" stroke="#27313C"/>
+  <rect x="84" y="583" width="118" height="74" rx="18" fill="#0F141A" stroke="#27313C"/>
+  <text x="112" y="614" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="14" letter-spacing="2">TIME</text>
+  <text x="97" y="638" fill="#E7EDF5" font-family="'IBM Plex Mono', monospace" font-size="16" font-weight="700">01:38 UTC</text>
+  <text x="260" y="613" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="28" font-weight="700">Collaborators open the deprecation PR and contact npm</text>
+  <text x="260" y="642" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="20">By this point, the compromise was publicly noticed and the response effort had started in earnest.</text>
+
+  <circle cx="180" cy="726" r="11" fill="#6EE7C8"/>
+  <rect x="228" y="680" width="1120" height="92" rx="22" fill="#18212B" stroke="#27313C"/>
+  <rect x="84" y="689" width="118" height="74" rx="18" fill="#0F141A" stroke="#27313C"/>
+  <text x="100" y="720" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="14" letter-spacing="2">03:15 TO</text>
+  <text x="100" y="744" fill="#E7EDF5" font-family="'IBM Plex Mono', monospace" font-size="16" font-weight="700">03:29 UTC</text>
+  <text x="260" y="719" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="28" font-weight="700">The malicious axios versions and plain-crypto-js are removed</text>
+  <text x="260" y="748" fill="#94A3B8" font-family="'IBM Plex Sans', sans-serif" font-size="20">The maintainer says axios was removed at 03:15 UTC and plain-crypto-js at 03:29 UTC.</text>
+
+  <rect x="84" y="840" width="1264" height="84" rx="22" fill="#0F141A" stroke="#27313C"/>
+  <text x="116" y="875" fill="#6EE7C8" font-family="'IBM Plex Mono', monospace" font-size="15" letter-spacing="2">DEFENDER TAKE</text>
+  <text x="116" y="906" fill="#E7EDF5" font-family="'IBM Plex Sans', sans-serif" font-size="24" font-weight="600">The risky moment was not just "using axios." It was running a fresh install during the incident window.</text>
+</svg>
